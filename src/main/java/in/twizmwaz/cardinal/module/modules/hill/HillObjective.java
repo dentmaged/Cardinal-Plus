@@ -9,6 +9,8 @@ import in.twizmwaz.cardinal.module.modules.regions.RegionModule;
 import in.twizmwaz.cardinal.module.modules.score.ScoreModule;
 import in.twizmwaz.cardinal.module.modules.scoreboard.GameObjectiveScoreboardHandler;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
+import in.twizmwaz.cardinal.util.TeamUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -18,6 +20,7 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -28,7 +31,7 @@ public class HillObjective implements TaskedModule, GameObjective {
     private final int captureTime, points;
     private final double pointsGrowth, timeMultiplier;
     private final CaptureRule captureRule;
-    private final boolean showProgress ,neutralState, incremental, permanent, show;
+    private final boolean showProgress, neutralState, incremental, permanent, show;
     private final RegionModule capture, progress, captured;
     private double controlTime;
 
@@ -174,4 +177,5 @@ public class HillObjective implements TaskedModule, GameObjective {
             }
         }
     }
+
 }

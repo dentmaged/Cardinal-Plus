@@ -219,6 +219,10 @@ public class PermissionModule implements Module {
         return Cardinal.getInstance().getConfig().getBoolean("permissions." + rank + ".staff");
     }
 
+    public static double getMultiplier(String rank) {
+        return Cardinal.getInstance().getConfig().getDouble("permissions." + rank + ".multiplier");
+    }
+
     public String getDefaultRank() {
         String foundRank = "";
         boolean found = false;

@@ -16,6 +16,7 @@ permissions:
     staff: false
     default: true
     prefix: ''
+    multiplier: 1
     permissions:
     - cardinal.chat.global
     - cardinal.chat.team
@@ -23,6 +24,7 @@ permissions:
     default: false
     staff: true
     prefix: '&c(star)'
+    multiplier: 1.5
     permissions:
     - cardinal.say
     - cardinal.broadcast
