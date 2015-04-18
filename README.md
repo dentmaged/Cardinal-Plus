@@ -1,4 +1,4 @@
-CardinalPGM [![Build Status](https://travis-ci.org/twizmwazin/CardinalPGM.svg?branch=master)](https://travis-ci.org/twizmwazin/CardinalPGM)
+Cardinal+
 ===========
 
 This is the next PGM clone.
@@ -29,3 +29,7 @@ Before submitting a Pull Request, to increase the chances of the pull request be
 
 ##Compiling
 To compile and run the latest development version of CardinalPGM, you will need [JDK7](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) and [Apache-Maven](http://maven.apache.org/). On most Linux distributions, you can find both packages in your default repositories. To compile, simply run `mvn clean install` in your command line, in the CardinalPGM directory. The plugin should be found in `target/`, as `CardinalPGM-1.0-SNAPSHOT.jar`.
+
+## Why was this made?
+
+I had made a pull request - which had a rank system in it. I had also made another one 4 days before that, with the observer book. CaptainElliott and myself got into an argument and I decided that I was going to stop and make my own fork - Cardinal+. And here we are! I'm going to begin work on a 1.7 version later down the line. Feel free to contribute!

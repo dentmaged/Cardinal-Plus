@@ -106,3 +106,6 @@ src/main/resources/rebel.xml
 src/main/java/me/hfox/morphix/Testing.java
 
 build
+
+# Patch files - from converting.
+*.patch

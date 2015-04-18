@@ -260,4 +260,13 @@
         <wither>{0} withered away</wither>
         <unknown>{0} died from unknown causes</unknown>
     </deathMsg>
+    <book>
+        <title>`b`lHow-to use CardinalPGM!</title>
+        <author>`6CardinalPGM</author>
+        <pages>
+            <page>Welcome to Cardinal+! Cardinal+ is based off CardinalPGM created by twizmwazin.</page>
+            <page>Commands</page>
+            <page>Contributors</page>
+        </pages>
+    </book>
 </locale>
