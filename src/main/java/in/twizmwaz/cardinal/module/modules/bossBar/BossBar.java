@@ -1,10 +1,13 @@
 package in.twizmwaz.cardinal.module.modules.bossBar;
 
-import com.google.common.collect.Maps;
 import in.twizmwaz.cardinal.Cardinal;
 import in.twizmwaz.cardinal.chat.ChatMessage;
 import in.twizmwaz.cardinal.module.Module;
+
+import java.util.Map;
+
 import net.minecraft.server.v1_8_R1.PlayerConnection;
+
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -12,12 +15,13 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
-import java.util.Map;
+import com.google.common.collect.Maps;
 
 public class BossBar implements Module {
 
@@ -51,12 +55,14 @@ public class BossBar implements Module {
                 @Override
                 public void run() {
                     if (players.containsKey(player)) {
-                        FakeWither oldwither = getWither(player, "");
-                        float health = oldwither.health;
-                        String message = oldwither.name;
-                        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(getWither(player, "").getDestroyPacket());
+                        FakeWither oldWither = getWither(player, "");
+                        float health = oldWither.health;
+                        String message = oldWither.name;
+                        if (oldWither.isVisible()) {
+                            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(getWither(player, "").getDestroyPacket());
+                        }
                         players.remove(player);
-                        FakeWither wither = addWither(player, location, message);
+                        FakeWither wither = addWither(player, message, oldWither.isVisible());
                         wither.health = health;
                         sendWither(wither, player);
                     }
@@ -81,14 +87,19 @@ public class BossBar implements Module {
 
     FakeWither addWither(Player player, String message) {
         FakeWither wither = new FakeWither(message, getWitherLocation(player));
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getSpawnPacket());
+        if (wither.isVisible()) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getSpawnPacket());
+        }
         players.put(player, wither);
         return wither;
     }
 
-    private FakeWither addWither(Player player, Location loc, String message) {
+    private FakeWither addWither(Player player, String message, boolean visible) {
         FakeWither wither = new FakeWither(message, getWitherLocation(player));
-        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getSpawnPacket());
+        wither.setVisible(visible);
+        if (visible) {
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getSpawnPacket());
+        }
         players.put(player, wither);
         return wither;
     }
@@ -97,8 +108,13 @@ public class BossBar implements Module {
         return player.getLocation().add(player.getEyeLocation().getDirection().multiply(100));
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        addWither(event.getPlayer(), "", false);
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void PlayerLogout(PlayerQuitEvent event) {
+    public void onPlayerLogout(PlayerQuitEvent event) {
         players.remove(event.getPlayer());
     }
 
