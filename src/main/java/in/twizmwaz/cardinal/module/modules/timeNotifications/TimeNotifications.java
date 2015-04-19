@@ -4,14 +4,18 @@ import in.twizmwaz.cardinal.GameHandler;
 import in.twizmwaz.cardinal.chat.ChatConstant;
 import in.twizmwaz.cardinal.chat.LocalizedChatMessage;
 import in.twizmwaz.cardinal.chat.UnlocalizedChatMessage;
+import in.twizmwaz.cardinal.event.MatchEndEvent;
 import in.twizmwaz.cardinal.module.TaskedModule;
+import in.twizmwaz.cardinal.module.modules.bossBar.BossBar;
 import in.twizmwaz.cardinal.module.modules.matchTimer.MatchTimer;
 import in.twizmwaz.cardinal.module.modules.timeLimit.TimeLimit;
 import in.twizmwaz.cardinal.util.ChatUtils;
 import in.twizmwaz.cardinal.util.StringUtils;
 
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class TimeNotifications implements TaskedModule {
 
@@ -39,6 +43,8 @@ public class TimeNotifications implements TaskedModule {
                 return;
             }
             timeRemaining = TimeLimit.getMatchTimeLimit() - time;
+            int percent = (int) (50);
+            BossBar.sendGlobalMessage(new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
             if (nextTimeMessage >= timeRemaining) {
                 if (nextTimeMessage <= 5) {
                     ChatUtils.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatColor.DARK_RED + StringUtils.formatTime(nextTimeMessage), new LocalizedChatMessage(ChatConstant.UI_TIMER)));
@@ -63,7 +69,20 @@ public class TimeNotifications implements TaskedModule {
         }
     }
 
+    @EventHandler
+    public void matchEnd(MatchEndEvent e) {
+        BossBar.hideWitherGlobally();
+    }
+
+    @EventHandler
+    public void playerRespawn(PlayerRespawnEvent event) {
+        double timeRemaining = TimeLimit.getMatchTimeLimit() - MatchTimer.getTimeInSeconds(); 
+        int percent = (int) (50);
+        BossBar.send(event.getPlayer(), new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
+    }
+
     public static void resetNextMessage() {
         nextTimeMessage = TimeLimit.getMatchTimeLimit();
     }
+
 }

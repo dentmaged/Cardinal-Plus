@@ -47,4 +47,16 @@ public class ChatUtils {
         GLOBAL, ADMIN, TEAM
     }
 
+    public static ChatColor getTimerColor(double time) {
+        if (time <= 5) {
+            return ChatColor.RED;
+        } else if (time <= 30) {
+            return ChatColor.GOLD;
+        } else if (time <= 60) {
+            return ChatColor.YELLOW;
+        } else {
+            return ChatColor.GREEN;
+        }
+    }
+
 }

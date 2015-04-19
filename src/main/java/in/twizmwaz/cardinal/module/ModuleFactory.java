@@ -74,12 +74,13 @@ import in.twizmwaz.cardinal.module.modules.visibility.VisibilityBuilder;
 import in.twizmwaz.cardinal.module.modules.wildcard.WildCardBuilder;
 import in.twizmwaz.cardinal.module.modules.wools.WoolObjectiveBuilder;
 import in.twizmwaz.cardinal.module.modules.worldFreeze.WorldFreezeBuilder;
-import org.bukkit.Bukkit;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.bukkit.Bukkit;
 
 public class ModuleFactory {
 
@@ -159,7 +160,7 @@ public class ModuleFactory {
             BossBarBuilder.class,
             UpdateNotificationBuilder.class,
             MatchTranscriptBuilder.class,
-            PotionRemoverBuilder.class
+            PotionRemoverBuilder.class,
     };
 
     @SuppressWarnings("unchecked")

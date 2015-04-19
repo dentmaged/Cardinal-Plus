@@ -1,10 +1,13 @@
 package in.twizmwaz.cardinal.module.modules.bossBar;
 
 import in.twizmwaz.cardinal.Cardinal;
+import in.twizmwaz.cardinal.GameHandler;
 import in.twizmwaz.cardinal.chat.ChatMessage;
+import in.twizmwaz.cardinal.event.CycleCompleteEvent;
 import in.twizmwaz.cardinal.module.Module;
 
 import java.util.Map;
+import java.util.Map.Entry;
 
 import net.minecraft.server.v1_8_R1.PlayerConnection;
 
@@ -37,6 +40,8 @@ public class BossBar implements Module {
     public void sendMessage(Player player, ChatMessage message, float percent) {
         Validate.isTrue(0F <= percent && percent <= 100F, "Percent must be between 0F and 100F, but was: ", percent);
         FakeWither wither = players.get(player);
+        handleTeleport(player, player.getLocation(), true);
+        
         wither.name = checkMessageLength(message.getMessage(player.getLocale()));
         wither.health = (percent / 100f) * wither.getMaxHealth();
         sendWither(wither, player);
@@ -50,6 +55,14 @@ public class BossBar implements Module {
     }
 
     public void handleTeleport(final Player player, final Location location) {
+        if (players.get(player) != null) {
+            handleTeleport(player, location, players.get(player).isVisible());
+        } else {
+            handleTeleport(player, location, false);
+        }
+    }
+
+    public void handleTeleport(final Player player, final Location location, final boolean visible) {
         if (players.containsKey(player)) {
             Bukkit.getScheduler().runTaskLater(Cardinal.getInstance(), new Runnable() {
                 @Override
@@ -62,7 +75,7 @@ public class BossBar implements Module {
                             ((CraftPlayer) player).getHandle().playerConnection.sendPacket(getWither(player, "").getDestroyPacket());
                         }
                         players.remove(player);
-                        FakeWither wither = addWither(player, message, oldWither.isVisible());
+                        FakeWither wither = addWither(player, message, visible);
                         wither.health = health;
                         sendWither(wither, player);
                     }
@@ -113,6 +126,13 @@ public class BossBar implements Module {
         addWither(event.getPlayer(), "", false);
     }
 
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onCycleComplete(CycleCompleteEvent event) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            addWither(player, "", false);
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLogout(PlayerQuitEvent event) {
         players.remove(event.getPlayer());
@@ -132,4 +152,21 @@ public class BossBar implements Module {
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
         handleTeleport(event.getPlayer(), event.getRespawnLocation().clone());
     }
+
+    public static void sendGlobalMessage(ChatMessage message, float percent) {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            send(player, message, percent);
+        }
+    }
+
+    public static void send(Player player, ChatMessage message, float percent) {
+        GameHandler.getGameHandler().getMatch().getModules().getModule(BossBar.class).sendMessage(player, message, percent);
+    }
+
+    public static void hideWitherGlobally() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            GameHandler.getGameHandler().getMatch().getModules().getModule(BossBar.class).handleTeleport(player, player.getLocation(), false);
+        }
+    }
+
 }
