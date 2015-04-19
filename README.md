@@ -3,8 +3,6 @@ Cardinal+
 
 This is the next PGM clone.
 
-Downloads can be found on [ci.twizmwaz.in](http://ci.twizmwaz.in/job/Cardinal/). It is imperative that users stay on the latest version, so please check for updates regularly. 
-
 Feel free to submit pull requests and/or issues to help further development. If you find an issue, please submit an issue so a developer can resolve it as soon as possible. If an issue is found with a dependency, submit your issue to the dependency's repository.
 
 ##Issue Reporting
