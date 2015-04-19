@@ -19,6 +19,11 @@ import in.twizmwaz.cardinal.util.ChatUtils;
 import in.twizmwaz.cardinal.util.FireworkUtil;
 import in.twizmwaz.cardinal.util.MiscUtils;
 import in.twizmwaz.cardinal.util.TeamUtils;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
@@ -37,10 +42,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.material.Wool;
 import org.bukkit.util.Vector;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
-
 public class WoolObjective implements GameObjective {
 
     private final TeamModule team;
@@ -54,7 +55,7 @@ public class WoolObjective implements GameObjective {
     private Vector location;
     private double proximity;
 
-    private Set<UUID> playersTouched;
+    private Set<UUID> playersTouched, receivedSnowflakes;
     private boolean touched;
     private boolean complete;
 
@@ -73,6 +74,7 @@ public class WoolObjective implements GameObjective {
         this.proximity = Double.POSITIVE_INFINITY;
 
         this.playersTouched = new HashSet<>();
+        this.receivedSnowflakes = new HashSet<>();
 
         this.scoreboardHandler = new GameObjectiveScoreboardHandler(this);
     }
@@ -283,8 +285,9 @@ public class WoolObjective implements GameObjective {
 
     @EventHandler
     public void onWoolTouch(ObjectiveTouchEvent event) {
-        if (event.getObjective().equals(this) && event.displayTouchMessage()) {
+        if (event.getObjective().equals(this) && event.displayTouchMessage() && !this.receivedSnowflakes.contains(event.getPlayer().getUniqueId())) {
             Bukkit.getServer().getPluginManager().callEvent(new SnowflakeChangeEvent(event.getPlayer(), Snowflakes.ChangeReason.WOOL_TOUCH, 8, MiscUtils.convertDyeColorToChatColor(color) + name.toUpperCase().replaceAll("_", " ") + ChatColor.GRAY));
+            receivedSnowflakes.add(event.getPlayer().getUniqueId());
         }
     }
 

@@ -89,7 +89,11 @@ public class BossBar implements Module {
     void sendWither(FakeWither wither, Player player) {
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         connection.sendPacket(wither.getMetaPacket(wither.getWatcher()));
-        connection.sendPacket(wither.getTeleportPacket(getWitherLocation(player)));
+        if (wither.isVisible()) {
+            connection.sendPacket(wither.getTeleportPacket(getWitherLocation(player)));
+        } else {
+            connection.sendPacket(wither.getTeleportPacket(getHiddenLocation(player)));
+        }
     }
 
     FakeWither getWither(Player player, String message) {
@@ -120,6 +124,10 @@ public class BossBar implements Module {
     }
 
     private Location getWitherLocation(Player player) {
+        return player.getLocation().add(player.getEyeLocation().getDirection().multiply(100));
+    }
+
+    private Location getHiddenLocation(Player player) {
         return player.getLocation().add(player.getEyeLocation().getDirection().multiply(100));
     }
 

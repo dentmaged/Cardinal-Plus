@@ -45,7 +45,7 @@ public class TimeNotifications implements TaskedModule {
             timeRemaining = TimeLimit.getMatchTimeLimit() - time;
             int percent = (int) time / TimeLimit.getMatchTimeLimit();
             // percent = percent * 100; TODO: Fix!
-            System.out.println(percent + " - " + time + " - " + TimeLimit.getMatchTimeLimit());
+            // System.out.println(percent + " - " + time + " - " + TimeLimit.getMatchTimeLimit());
             BossBar.sendGlobalMessage(new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
             if (nextTimeMessage >= timeRemaining) {
                 if (nextTimeMessage <= 5) {
