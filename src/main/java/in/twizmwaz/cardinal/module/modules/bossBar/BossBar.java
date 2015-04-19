@@ -7,7 +7,6 @@ import in.twizmwaz.cardinal.event.CycleCompleteEvent;
 import in.twizmwaz.cardinal.module.Module;
 
 import java.util.Map;
-import java.util.Map.Entry;
 
 import net.minecraft.server.v1_8_R1.PlayerConnection;
 
@@ -18,6 +17,7 @@ import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -33,8 +33,10 @@ public class BossBar implements Module {
     @Override
     public void unload() {
         for (Player player : players.keySet()) {
-            players.get(player);
+            ((CraftPlayer) player).getHandle().playerConnection.sendPacket(getWither(player, "").getDestroyPacket());
+            players.remove(player);
         }
+        HandlerList.unregisterAll(this);
     }
 
     public void sendMessage(Player player, ChatMessage message, float percent) {

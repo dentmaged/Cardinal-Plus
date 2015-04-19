@@ -2,6 +2,8 @@ package in.twizmwaz.cardinal.module.modules.buildHeight;
 
 import in.twizmwaz.cardinal.module.Module;
 import in.twizmwaz.cardinal.util.ChatUtils;
+import in.twizmwaz.cardinal.util.TeamUtils;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,6 +36,8 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+            return;
         if (event.getBlock().getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
             event.getPlayer().closeInventory();
@@ -48,6 +52,8 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+            return;
         if (event.getBlock().getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
             ChatUtils.sendWarningMessage(event.getPlayer(), "You have reached the maximum build height! " + ChatColor.GRAY + "(" + height + " blocks)");
@@ -56,6 +62,8 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onEmptyBucket(PlayerBucketEmptyEvent event) {
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+            return;
         Block toFill = event.getBlockClicked().getRelative(event.getBlockFace());
         if (toFill.getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
@@ -65,6 +73,8 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onFillBucket(PlayerBucketFillEvent event) {
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+            return;
         Block toEmpty = event.getBlockClicked().getRelative(event.getBlockFace());
         if (toEmpty.getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
@@ -93,4 +103,5 @@ public class BuildHeight implements Module {
             }
         }
     }
+
 }
