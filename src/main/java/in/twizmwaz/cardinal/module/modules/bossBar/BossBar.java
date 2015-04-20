@@ -89,11 +89,7 @@ public class BossBar implements Module {
     void sendWither(FakeWither wither, Player player) {
         PlayerConnection connection = ((CraftPlayer) player).getHandle().playerConnection;
         connection.sendPacket(wither.getMetaPacket(wither.getWatcher()));
-        if (wither.isVisible()) {
-            connection.sendPacket(wither.getTeleportPacket(getWitherLocation(player)));
-        } else {
-            connection.sendPacket(wither.getTeleportPacket(getHiddenLocation(player)));
-        }
+        connection.sendPacket(wither.getTeleportPacket(getWitherLocation(player)));
     }
 
     FakeWither getWither(Player player, String message) {
@@ -127,8 +123,11 @@ public class BossBar implements Module {
         return player.getLocation().add(player.getEyeLocation().getDirection().multiply(100));
     }
 
-    private Location getHiddenLocation(Player player) {
-        return player.getLocation().add(player.getEyeLocation().getDirection().multiply(100));
+    private void destroy(Player player) {
+        FakeWither wither = players.get(player);
+        if (wither == null)
+            return;
+        ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getDestroyPacket());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -175,7 +174,7 @@ public class BossBar implements Module {
 
     public static void hideWitherGlobally() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            GameHandler.getGameHandler().getMatch().getModules().getModule(BossBar.class).handleTeleport(player, player.getLocation(), false);
+            GameHandler.getGameHandler().getMatch().getModules().getModule(BossBar.class).destroy(player);
         }
     }
 

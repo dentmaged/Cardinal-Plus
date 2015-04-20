@@ -130,12 +130,18 @@ public class ObserverModule implements Module {
     @EventHandler
     public void onInteraction(PlayerInteractEvent event) {
         if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver() || match.getState() != MatchState.PLAYING) {
+            if (event.getAction() == Action.PHYSICAL) {
+                event.setCancelled(true);
+            }
+
             if (event.getPlayer().getItemInHand() != null && event.getPlayer().getItemInHand().getType() == Material.WRITTEN_BOOK && (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)) {
                 return;
             }
+
             if (!(event.getPlayer().getItemInHand() != null )) {
                 event.setCancelled(true);
             }
+
             if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 if (event.getClickedBlock().getType().equals(Material.CHEST) || event.getClickedBlock().getType().equals(Material.TRAPPED_CHEST)) {
                     Inventory chest = Bukkit.createInventory(null, ((Chest) event.getClickedBlock().getState()).getInventory().getSize(), (((Chest) event.getClickedBlock().getState()).getInventory().getSize() == 54 ? "Large Chest" : "Chest"));
@@ -144,6 +150,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(chest);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.FURNACE)) {
                     Inventory furnace = Bukkit.createInventory(null, InventoryType.FURNACE, "Furnace");
                     for (int i = 0; i < ((Furnace) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -151,6 +158,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(furnace);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.BURNING_FURNACE)) {
                     Inventory furnace = Bukkit.createInventory(null, InventoryType.FURNACE, "Furnace");
                     for (int i = 0; i < ((Furnace) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -158,6 +166,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(furnace);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.DISPENSER)) {
                     Inventory dispenser = Bukkit.createInventory(null, InventoryType.DISPENSER, "Dispenser");
                     for (int i = 0; i < ((Dispenser) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -165,6 +174,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(dispenser);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.DROPPER)) {
                     Inventory dropper = Bukkit.createInventory(null, InventoryType.DROPPER, "Dropper");
                     for (int i = 0; i < ((Dropper) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -172,6 +182,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(dropper);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.HOPPER)) {
                     Inventory hopper = Bukkit.createInventory(null, InventoryType.HOPPER, "Hopper");
                     for (int i = 0; i < ((Hopper) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -179,6 +190,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(hopper);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.BREWING_STAND)) {
                     Inventory brewingStand = Bukkit.createInventory(null, InventoryType.BREWING, "Brewing Stand");
                     for (int i = 0; i < ((BrewingStand) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
@@ -186,6 +198,7 @@ public class ObserverModule implements Module {
                     }
                     event.getPlayer().openInventory(brewingStand);
                 }
+
                 if (event.getClickedBlock().getType().equals(Material.BEACON)) {
                     Inventory beacon = Bukkit.createInventory(null, InventoryType.BEACON, "Beacon");
                     for (int i = 0; i < ((Beacon) event.getClickedBlock().getState()).getInventory().getSize(); i++) {
