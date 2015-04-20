@@ -132,7 +132,7 @@ public class Stats implements Module {
             }
         }
 
-        if (Cardinal.getInstance().getConfig().getBoolean("html.upload")) {
+        /* if (Cardinal.getInstance().getConfig().getBoolean("html.upload")) {
         	Bukkit.getScheduler().scheduleSyncDelayedTask(GameHandler.getGameHandler().getPlugin(), new Runnable() {
             	public void run() {
                 	ChatChannelModule global = GameHandler.getGameHandler().getMatch().getModules().getModule(GlobalChannel.class);
@@ -143,7 +143,7 @@ public class Stats implements Module {
                 	else global.sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", ChatConstant.UI_MATCH_REPORT_SUCCESS.asMessage(new UnlocalizedChatMessage(result))));
             	}
         	}, 20);
-        }
+        } */
     }
 
     @EventHandler
