@@ -3,7 +3,9 @@ package in.twizmwaz.cardinal.command;
 import com.sk89q.minecraft.util.commands.Command;
 import com.sk89q.minecraft.util.commands.CommandContext;
 import com.sk89q.minecraft.util.commands.CommandException;
+import com.sk89q.minecraft.util.commands.CommandPermissionsException;
 import com.sk89q.minecraft.util.commands.CommandUsageException;
+
 import in.twizmwaz.cardinal.GameHandler;
 import in.twizmwaz.cardinal.chat.ChatConstant;
 import in.twizmwaz.cardinal.chat.LocalizedChatMessage;
@@ -12,6 +14,7 @@ import in.twizmwaz.cardinal.event.TeamNameChangeEvent;
 import in.twizmwaz.cardinal.module.modules.team.TeamModule;
 import in.twizmwaz.cardinal.util.ChatUtils;
 import in.twizmwaz.cardinal.util.TeamUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -49,6 +52,8 @@ public class TeamCommand {
                 } else {
                     throw new CommandUsageException("Too few arguments.", "/team <force> <player> <force team>");
                 }
+            } else {
+                throw new CommandPermissionsException();
             }
         } else if (cmd.getString(0).equalsIgnoreCase("alias")) {
             if (sender.hasPermission("cardinal.team.alias")) {
@@ -70,6 +75,8 @@ public class TeamCommand {
                 } else {
                     throw new CommandUsageException("Too few arguments!", "/team <alias> <old team> <new team>");
                 }
+            } else {
+                throw new CommandPermissionsException();
             }
         } else if (cmd.getString(0).equalsIgnoreCase("shuffle")) {
             if (sender.hasPermission("cardinal.team.shuffle")) {
@@ -91,9 +98,23 @@ public class TeamCommand {
                 }
                 String locale = ChatUtils.getLocale(sender);
                 sender.sendMessage(ChatColor.GREEN + new LocalizedChatMessage(ChatConstant.GENERIC_TEAM_SHUFFLE).getMessage(locale));
+            } else {
+                throw new CommandPermissionsException();
+            }
+        } else if (cmd.getString(0).equalsIgnoreCase("size")) {
+            if (sender.hasPermission("cardinal.team.size")) {
+                TeamModule team = TeamUtils.getTeamByName(cmd.getString(1));
+                if (team == null) {
+                    throw new CommandException(new LocalizedChatMessage(ChatConstant.ERROR_NO_TEAM_MATCH).getMessage(ChatUtils.getLocale(sender)));
+                }
+                team.setMax(cmd.getInteger(1));
+                team.setMaxOverfill(cmd.getInteger(1));
+                sender.sendMessage(new LocalizedChatMessage(ChatConstant.GENERIC_TEAM_SIZE_UPDATE, team.getCompleteName() + ChatColor.YELLOW, cmd.getInteger(1) + "").getMessage(ChatUtils.getLocale(sender)));
+            } else {
+                throw new CommandPermissionsException();
             }
         } else {
-            throw new CommandUsageException("Invalid arguments.", "/team <force, alias, shuffle> [player, old team] [force team, new team]");
+            throw new CommandUsageException("Invalid arguments.", "/team <force, alias, shuffle, size> [player, old team] [force team, new team, size]");
         }
     }
 
