@@ -1,6 +1,5 @@
 package in.twizmwaz.cardinal.util;
 
-import com.google.common.collect.Lists;
 import org.bukkit.Bukkit;
 import org.jdom2.Document;
 import org.jdom2.Element;
@@ -9,7 +8,6 @@ import org.jdom2.input.SAXBuilder;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.logging.Level;
 
 public class DomUtils {
@@ -17,13 +15,11 @@ public class DomUtils {
     public static Document parse(File file) throws JDOMException, IOException {
         SAXBuilder saxBuilder = new SAXBuilder();
         Document original = saxBuilder.build(file);
-        List<String> toInclude = Lists.newArrayList();
-        for (Element include : original.getRootElement().getChildren("include"))
-            toInclude.add(include.getAttributeValue("src"));
-        for (String include : toInclude) {
+        for (Element include : original.getRootElement().getChildren("include")) {
             boolean found = false;
             File path = file.getParentFile();
-            File including = new File(path, include);
+            String source = include.getAttributeValue("src");
+            File including = new File(path, source);
             if (including.exists()) {
                 found = true;
                 try {
@@ -32,10 +28,10 @@ public class DomUtils {
                     }
                 } catch (JDOMException | IOException ignored) {}
             } else {
-                while (include.startsWith("../")) {
-                    include = include.replace("../", "");
+                while (source.startsWith("../")) {
+                    source = source.replace("../", "");
                 }
-                including = new File(path, include);
+                including = new File(path, source);
                 if (including.exists()) {
                     found = true;
                     try {
@@ -45,7 +41,7 @@ public class DomUtils {
                     } catch (JDOMException | IOException ignored) {
                     }
                 }
-                including = new File(path.getParentFile(), include);
+                including = new File(path.getParentFile(), source);
                 if (including.exists()) {
                     found = true;
                     try {
@@ -60,5 +56,4 @@ public class DomUtils {
         }
         return original;
     }
-
 }
