@@ -130,6 +130,7 @@
         <and>and</and>
         <by>by</by>
         <team>Team</team>
+        <the>the</the>
     </misc>
     <userInterface>
         <mapLoaded>Loaded Maps</mapLoaded>

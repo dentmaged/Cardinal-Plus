@@ -22,6 +22,7 @@ import in.twizmwaz.cardinal.util.ChatUtils;
 import in.twizmwaz.cardinal.util.FireworkUtil;
 import in.twizmwaz.cardinal.util.MiscUtils;
 import in.twizmwaz.cardinal.util.TeamUtils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -165,7 +166,11 @@ public class CoreObjective implements GameObjective {
                             channel.sendLocalizedMessage(new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_TOUCHED, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.RED + name + ChatColor.GRAY));
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 if (TeamUtils.getTeamByPlayer(player) != null && TeamUtils.getTeamByPlayer(player).isObserver()) {
-                                    player.sendMessage(new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_TOUCHED_FOR, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.RED + name + ChatColor.GRAY, teamModule.getCompleteName() + ChatColor.GRAY).getMessage(player.getLocale()));
+                                    String message = new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DAMAGED_FOR, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.AQUA + name + ChatColor.GRAY, teamModule.getCompleteName() + ChatColor.GRAY).getMessage(player.getLocale());
+                                    if (!teamModule.getOriginalName().equalsIgnoreCase(teamModule.getName())) {
+                                        message = message.replace(new LocalizedChatMessage(ChatConstant.MISC_THE).getMessage(player.getLocale()) + " ", "");
+                                    }
+                                    player.sendMessage(message);
                                 }
                             }
                             touchMessage = true;

@@ -140,7 +140,11 @@ public class DestroyableObjective implements GameObjective {
                             TeamUtils.getTeamChannel(teamModule).sendLocalizedMessage(new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DAMAGED, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.AQUA + name));
                             for (Player player : Bukkit.getOnlinePlayers()) {
                                 if (TeamUtils.getTeamByPlayer(player) != null && TeamUtils.getTeamByPlayer(player).isObserver()) {
-                                    player.sendMessage(new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DAMAGED_FOR, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.AQUA + name + ChatColor.GRAY, teamModule.getCompleteName() + ChatColor.GRAY).getMessage(player.getLocale()));
+                                    String message = new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DAMAGED_FOR, teamModule.getColor() + event.getPlayer().getName() + ChatColor.GRAY, ChatColor.AQUA + name + ChatColor.GRAY, teamModule.getCompleteName() + ChatColor.GRAY).getMessage(player.getLocale());
+                                    if (!teamModule.getOriginalName().equalsIgnoreCase(teamModule.getName())) {
+                                        message = message.replace(new LocalizedChatMessage(ChatConstant.MISC_THE).getMessage(player.getLocale()) + " ", "");
+                                    }
+                                    player.sendMessage(message);
                                 }
                             }
                         }
@@ -152,7 +156,13 @@ public class DestroyableObjective implements GameObjective {
                         this.completed = true;
                         event.setCancelled(false);
                         if (this.show) {
-                            for (Player player : Bukkit.getOnlinePlayers()) player.sendMessage(ChatColor.GRAY + new UnlocalizedChatMessage("{0}", new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DESTROYED, team.getCompleteName() + ChatColor.GRAY, ChatColor.AQUA + name + ChatColor.GRAY, getWhoDestroyed(player.getLocale()))).getMessage(player.getLocale()));
+                            for (Player player : Bukkit.getOnlinePlayers()) {
+                                String message = ChatColor.GRAY + new UnlocalizedChatMessage("{0}", new LocalizedChatMessage(ChatConstant.UI_OBJECTIVE_DESTROYED, team.getCompleteName() + ChatColor.GRAY, ChatColor.AQUA + name + ChatColor.GRAY, getWhoDestroyed(player.getLocale()))).getMessage(player.getLocale());
+                                if (!team.getOriginalName().equalsIgnoreCase(team.getName())) {
+                                    message = message.replace(new LocalizedChatMessage(ChatConstant.MISC_THE).getMessage(player.getLocale()) + " ", "");
+                                }
+                                player.sendMessage(message);
+                            }
                         }
                         FireworkUtil.spawnFirework(event.getPlayer().getLocation(), event.getPlayer().getWorld(), MiscUtils.convertChatColorToColor(team.getColor()));
                         ObjectiveCompleteEvent compEvent = new ObjectiveCompleteEvent(this, event.getPlayer());

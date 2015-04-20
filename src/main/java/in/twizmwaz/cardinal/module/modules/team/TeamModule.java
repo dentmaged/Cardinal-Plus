@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class TeamModule<P extends Player> extends ArrayList<Player> implements Module {
 
     private final Match match;
-    private String name;
+    private String name, originalName;
     private final String id;
     private int max;
     private int maxOverfill;
@@ -32,6 +32,7 @@ public class TeamModule<P extends Player> extends ArrayList<Player> implements M
     protected TeamModule(Match match, String name, String id, int max, int maxOverfill, int respawnLimit, ChatColor color, boolean observer) {
         this.match = match;
         this.name = name;
+        this.originalName = name;
         this.id = id;
         this.max = max;
         this.maxOverfill = maxOverfill;
@@ -103,6 +104,10 @@ public class TeamModule<P extends Player> extends ArrayList<Player> implements M
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOriginalName() {
+        return originalName;
     }
 
     public String getId() {

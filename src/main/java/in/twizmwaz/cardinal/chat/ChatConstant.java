@@ -133,6 +133,7 @@ public enum  ChatConstant {
     MISC_AND("misc.and"),
     MISC_BY("misc.by"),
     MISC_TEAM("misc.team"),
+    MISC_THE("misc.the"),
     
     UI_MAPLOADED("userInterface.mapLoaded"),
     UI_MAP_OBJECTIVE("userInterface.mapObjective"),
