@@ -60,8 +60,10 @@ public class StartTimer implements TaskedModule, Cancellable {
                         }
                     }
                     match.setState(MatchState.PLAYING);
+                    BossBar.sendGlobalMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)), 0);
                     ChatUtils.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
                     Bukkit.getServer().getPluginManager().callEvent(new MatchStartEvent());
+                    BossBar.hideWitherGlobally();
                 }
             }
             if (time <= 60 && time >= 20 && time % 20 == 0) {

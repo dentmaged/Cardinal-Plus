@@ -42,6 +42,8 @@ public class BossBar implements Module {
     public void sendMessage(Player player, ChatMessage message, float percent) {
         Validate.isTrue(0F <= percent && percent <= 100F, "Percent must be between 0F and 100F, but was: ", percent);
         FakeWither wither = players.get(player);
+        if (wither == null)
+            addWither(player, message.getMessage(player.getLocale()), true);
         handleTeleport(player, player.getLocation(), true);
         
         wither.name = checkMessageLength(message.getMessage(player.getLocale()));
@@ -128,6 +130,7 @@ public class BossBar implements Module {
         if (wither == null)
             return;
         ((CraftPlayer) player).getHandle().playerConnection.sendPacket(wither.getDestroyPacket());
+        players.remove(player);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -149,17 +152,23 @@ public class BossBar implements Module {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerMove(final PlayerMoveEvent event) {
-        handleTeleport(event.getPlayer(), event.getTo());
+        if (players.get(event.getPlayer()) != null) {
+            handleTeleport(event.getPlayer(), event.getTo());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerTeleport(final PlayerTeleportEvent event) {
-        handleTeleport(event.getPlayer(), event.getTo());
+        if (players.get(event.getPlayer()) != null) {
+            handleTeleport(event.getPlayer(), event.getTo());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerRespawn(final PlayerRespawnEvent event) {
-        handleTeleport(event.getPlayer(), event.getRespawnLocation().clone());
+        if (players.get(event.getPlayer()) != null) {
+            handleTeleport(event.getPlayer(), event.getRespawnLocation().clone());
+        }
     }
 
     public static void sendGlobalMessage(ChatMessage message, float percent) {
