@@ -1,5 +1,8 @@
 package in.twizmwaz.cardinal.module.modules.buildHeight;
 
+import in.twizmwaz.cardinal.GameHandler;
+import in.twizmwaz.cardinal.match.Match;
+import in.twizmwaz.cardinal.match.MatchState;
 import in.twizmwaz.cardinal.module.Module;
 import in.twizmwaz.cardinal.util.ChatUtils;
 import in.twizmwaz.cardinal.util.TeamUtils;
@@ -23,10 +26,11 @@ import java.util.Set;
 public class BuildHeight implements Module {
 
     private final int height;
+    private Match match;
 
     protected BuildHeight(int height) {
         this.height = height;
-
+        this.match = GameHandler.getGameHandler().getMatch();
     }
 
     @Override
@@ -36,7 +40,7 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver() || match.getState() != MatchState.PLAYING)
             return;
         if (event.getBlock().getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
@@ -52,7 +56,7 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver() || match.getState() != MatchState.PLAYING)
             return;
         if (event.getBlock().getY() >= height && !event.isCancelled()) {
             event.setCancelled(true);
@@ -62,7 +66,7 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onEmptyBucket(PlayerBucketEmptyEvent event) {
-        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver() || match.getState() != MatchState.PLAYING)
             return;
         Block toFill = event.getBlockClicked().getRelative(event.getBlockFace());
         if (toFill.getY() >= height && !event.isCancelled()) {
@@ -73,7 +77,7 @@ public class BuildHeight implements Module {
 
     @EventHandler
     public void onFillBucket(PlayerBucketFillEvent event) {
-        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver())
+        if (TeamUtils.getTeamByPlayer(event.getPlayer()).isObserver() || match.getState() != MatchState.PLAYING)
             return;
         Block toEmpty = event.getBlockClicked().getRelative(event.getBlockFace());
         if (toEmpty.getY() >= height && !event.isCancelled()) {
