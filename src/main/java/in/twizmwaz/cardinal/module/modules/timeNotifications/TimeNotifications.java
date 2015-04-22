@@ -78,6 +78,8 @@ public class TimeNotifications implements TaskedModule {
 
     @EventHandler
     public void playerRespawn(PlayerRespawnEvent event) {
+        if (TimeLimit.getMatchTimeLimit() == 0)
+            return;
         double timeRemaining = TimeLimit.getMatchTimeLimit() - MatchTimer.getTimeInSeconds(); 
         int percent = (int) (50);
         BossBar.send(event.getPlayer(), new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
