@@ -59,6 +59,7 @@ public class StartTimer implements TaskedModule, Cancellable {
                             return;
                         }
                     }
+                    cancelled = true;
                     match.setState(MatchState.PLAYING);
                     BossBar.sendGlobalMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)), 0);
                     ChatUtils.getGlobalChannel().sendLocalizedMessage(new UnlocalizedChatMessage(ChatColor.GREEN + "{0}", new LocalizedChatMessage(ChatConstant.UI_MATCH_STARTED)));
