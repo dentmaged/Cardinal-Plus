@@ -2,18 +2,22 @@ package in.twizmwaz.cardinal.rotation;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
 import in.twizmwaz.cardinal.Cardinal;
 import in.twizmwaz.cardinal.rotation.exception.RotationLoadException;
 import in.twizmwaz.cardinal.util.Contributor;
 import in.twizmwaz.cardinal.util.DomUtils;
 import in.twizmwaz.cardinal.util.MojangUtils;
 import in.twizmwaz.cardinal.util.NumUtils;
+import in.twizmwaz.cardinal.util.WebUtils;
+
 import org.apache.commons.io.Charsets;
 import org.bukkit.Bukkit;
 import org.jdom2.Document;
 import org.jdom2.Element;
 
 import java.io.*;
+import java.net.URL;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Level;
@@ -21,13 +25,17 @@ import java.util.logging.Level;
 public class Rotation {
 
     private File rotationFile;
+    private boolean isOnlineRotation;
     private List<LoadedMap> rotation;
     private List<LoadedMap> loaded;
     private int position;
     private File repo;
 
     public Rotation() throws RotationLoadException {
-        this.rotationFile = new File(Cardinal.getInstance().getConfig().getString("rotation"));
+        if (Cardinal.getInstance().getConfig().getBoolean("rotation.online") && Cardinal.getInstance().getConfig().getString("rotation.url").toLowerCase().startsWith("http")) {
+            isOnlineRotation = true;
+        }
+        this.rotationFile = new File(Cardinal.getInstance().getConfig().getString("rotation.file"));
         refreshRepo();
         refreshRotation();
     }
@@ -96,12 +104,15 @@ public class Rotation {
     public void refreshRotation() {
         rotation = new ArrayList<>();
         try {
-            if (!rotationFile.exists()) {
+            if (!rotationFile.exists() && !isOnlineRotation) {
                 List<String> maps = Lists.newArrayList();
                 for (LoadedMap map : loaded) maps.add(map.getName());
                 FileWriter writer = new FileWriter(rotationFile);
                 for (String map : maps) writer.write(map + System.lineSeparator());
                 writer.close();
+            }
+            if (isOnlineRotation) {
+                WebUtils.readURLAndSaveToFile(new URL(Cardinal.getInstance().getConfig().getString("rotation.url")), rotationFile);
             }
             List<String> lines = Files.readAllLines(rotationFile.toPath(), Charsets.UTF_8);
             for (String line : lines) {

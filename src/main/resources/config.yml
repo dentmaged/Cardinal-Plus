@@ -1,5 +1,8 @@
 repo: maps
-rotation: rotation.txt
+rotation:
+  online: false
+  url: https://raw.githubusercontent.com/<username>/<repository>/master/<file>
+  file: rotation.txt
 deleteMatches: true
 displayMapLoadErrors: false
 custom-motd: true

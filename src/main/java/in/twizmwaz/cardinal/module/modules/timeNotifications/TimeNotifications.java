@@ -43,9 +43,7 @@ public class TimeNotifications implements TaskedModule {
                 return;
             }
             timeRemaining = TimeLimit.getMatchTimeLimit() - time;
-            int percent = (int) time / TimeLimit.getMatchTimeLimit();
-            // percent = percent * 100; TODO: Fix!
-            // System.out.println(percent + " - " + time + " - " + TimeLimit.getMatchTimeLimit());
+            int percent = (int) ((TimeLimit.getMatchTimeLimit() - time) / TimeLimit.getMatchTimeLimit());
             BossBar.sendGlobalMessage(new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
             if (nextTimeMessage >= timeRemaining) {
                 if (nextTimeMessage <= 5) {
@@ -80,8 +78,9 @@ public class TimeNotifications implements TaskedModule {
     public void playerRespawn(PlayerRespawnEvent event) {
         if (TimeLimit.getMatchTimeLimit() == 0)
             return;
+        double time = MatchTimer.getTimeInSeconds();
         double timeRemaining = TimeLimit.getMatchTimeLimit() - MatchTimer.getTimeInSeconds(); 
-        int percent = (int) (50);
+        int percent = (int) ((TimeLimit.getMatchTimeLimit() - time) / TimeLimit.getMatchTimeLimit());
         BossBar.send(event.getPlayer(), new UnlocalizedChatMessage(ChatColor.AQUA + "{0} " + ChatUtils.getTimerColor(timeRemaining) + "{1}", new LocalizedChatMessage(ChatConstant.UI_TIMER), new UnlocalizedChatMessage(StringUtils.formatTime(timeRemaining))), percent);
     }
 

@@ -47,7 +47,7 @@ public class BossBar implements Module {
         handleTeleport(player, player.getLocation(), true);
         
         wither.name = checkMessageLength(message.getMessage(player.getLocale()));
-        wither.health = (percent / 100f) * wither.getMaxHealth();
+        wither.health = percent * wither.getMaxHealth();
         sendWither(wither, player);
     }
 
